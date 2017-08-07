@@ -8,6 +8,10 @@ module GithubTrello
     post "/posthook" do
       config, http = self.class.config, self.class.http
 
+      request.body.rewind
+      payload_body = request.body.read
+      verify_signature(payload_body)
+
       payload = JSON.parse(params[:payload])
 
       board_id = config["board_ids"][payload["repository"]["name"]]
@@ -79,6 +83,11 @@ module GithubTrello
 
     post "/deployed/:repo" do
       config, http = self.class.config, self.class.http
+
+      request.body.rewind
+      payload_body = request.body.read
+      verify_signature(payload_body)
+      
       if !config["on_deploy"]
         raise "Deploy triggered without a on_deploy config specified"
       elsif !config["on_close"] or !config["on_close"]["move_to"]
@@ -121,5 +130,10 @@ module GithubTrello
 
     def self.config; @config end
     def self.http; @http end
+
+    def verify_signature(payload_body)
+      signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), ENV['SECRET_TOKEN'], payload_body)
+      return halt 500, "Signatures didn't match!" unless Rack::Utils.secure_compare(signature, request.env['HTTP_X_HUB_SIGNATURE'])
+    end
   end
 end
