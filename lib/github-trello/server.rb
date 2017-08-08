@@ -15,6 +15,8 @@ module GithubTrello
 
       payload = JSON.parse(params[:payload])
 
+      return "" if payload["ref"].nil? || payload["commits"].nil?
+
       board_id = config["board_ids"][payload["repository"]["name"]]
       unless board_id
         puts "[ERROR] Commit from #{payload["repository"]["name"]} but no board_id entry found in config"
