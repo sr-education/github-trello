@@ -130,7 +130,7 @@ module GithubTrello
     end
 
     def self.config
-      self.config = YAML::load(File.read("#{File.expand_path("..", Dir.pwd)}/trello.yml")) if @config.nil?
+      self.config = YAML::load(File.read("#{Dir.pwd}/config/trello.yml")) if @config.nil?
 
       @config
     end
