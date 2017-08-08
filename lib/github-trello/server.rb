@@ -15,6 +15,8 @@ module GithubTrello
 
       payload = JSON.parse(params[:payload])
 
+      puts payload.inspect
+
       return "" if payload["ref"].nil? || payload["commits"].nil?
 
       board_id = config["board_ids"][payload["repository"]["name"]]
