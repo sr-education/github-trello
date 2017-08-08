@@ -128,8 +128,15 @@ module GithubTrello
       @http = GithubTrello::HTTP.new(config["oauth_token"], config["api_key"])
     end
 
-    def self.config; @config end
-    def self.http; @http end
+    def self.config
+      self.config = YAML::load(File.read("#{File.expand_path("..", Dir.pwd)}/trello.yml")) if @config.blank?
+
+      @config
+    end
+
+    def self.http
+      @http
+    end
 
     def verify_signature(payload_body)
       config = self.class.config
