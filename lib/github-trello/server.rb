@@ -55,7 +55,7 @@ module GithubTrello
         # Determine the action to take
         update_config = case match[2].downcase
           when "case", "card" then config["on_start"]
-          when "close", "fix" then config["on_close"]
+          when "close", "fix", "finish" then config["on_close"]
           when "archive" then {:archive => true}
         end
 
