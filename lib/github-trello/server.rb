@@ -1,4 +1,5 @@
 require "json"
+require "yaml"
 require "sinatra/base"
 require "github-trello/version"
 require "github-trello/http"
