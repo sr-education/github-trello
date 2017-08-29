@@ -45,6 +45,12 @@ module GithubTrello
 
         results = JSON.parse(results)
 
+        list_results = http.get_list(results["idList"])
+
+        list_results = JSON.parse(list_results)
+
+        next if ["delivered", "live"].include?(list_results["name"].downcase)
+
         # Add the commit comment
         message = "#{commit["author"]["name"]}: #{commit["message"]}\n\n[#{branch}] #{commit["url"]}"
         message.gsub!(match[1], "")
