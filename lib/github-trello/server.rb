@@ -34,7 +34,7 @@ module GithubTrello
 
       payload["commits"].each do |commit|
         # Figure out the card short id
-        match = branch.match(/((case|card|close|stag|staging|finish|archive|fix)e?[sd]?\s?\D?([0-9]+))/i)
+        match = branch.match(/((case|card|close|stag|staging|finish|archive|fix)e?[sd]?\s?\D*([0-9]+))/i)
         # match = commit["message"].match(/((case|card|close|stag|staging|finish|archive|fix)e?[sd]? \D?([0-9]+))/i)
         next unless match and match[3].to_i > 0
 
@@ -100,7 +100,7 @@ module GithubTrello
       request.body.rewind
       payload_body = request.body.read
       verify_signature(payload_body)
-      
+
       if !config["on_deploy"]
         raise "Deploy triggered without a on_deploy config specified"
       elsif !config["on_close"] or !config["on_close"]["move_to"]
